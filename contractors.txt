@@ -1,0 +1,13 @@
+operations|10016|55.10|Peterson|Mikel|C.Cantor|active
+Accounting|10099|52.25|Archer|Fred|C.Cantor|inactive
+operations|10103|55.10|Archer|Sally|X.Jacobs|active
+Production|10024|49.45|Baker|Dana|X.Jacobs|active
+Operations|10047|42.89|Dunlop|Sam|C.Cantor|active
+accounting|10013|68.35|Matland|Kerri|X.Jacobs|active
+HR|10019|38.35|Boop|Betty|C.Cantor|active
+Operations|10061|59.10|Patterson|Larry|X.Jacobs|active
+Quality Control|10087|69.50|Caravel|Maria|O.Bessie|active
+operations|10004|70.45|Salsman|Denise|C.Cantor|active
+Quality Control|10066|67.75|Morrison|Marion|p.Johnson|inactive
+Logistics|10045|58.45|Telow|Betsy|X.Jacobs|active
+operations|10022|53.25|Xander|Coco|C.Cantor|active
