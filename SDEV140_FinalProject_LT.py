@@ -32,7 +32,7 @@ class DineEasyApp:
       self.root = root
       self.root.title("DineEasy")
       self.root.geometry("800x600")
-      self.root.resizable(True, True)
+      self.root.resizable(False, False)
       self.root.configure(bg="")
       self.root.grid_rowconfigure(0, weight=1)
       self.root.grid_columnconfigure(0, weight=1)
@@ -140,15 +140,18 @@ class DineEasyApp:
       summary_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
       customer_frame = ttk.Frame(summary_frame)
-      customer_frame.pack(fill=tk.X, pady=5)
+      customer_frame.grid(row=0, column=0)
+      customer_frame.columnconfigure(0, weight=1)
+      customer_frame.columnconfigure(1, weight=2)
 
-      ttk.Label(customer_frame, text="Name:").pack(side=tk.LEFT)
+      ttk.Label(customer_frame, text="Name:").grid(row=0, column=0, sticky="e")
       self.name_entry = ttk.Entry(customer_frame)
-      self.name_entry.pack(side=tk.LEFT, fill=tk.X, padx=5)
+      self.name_entry.grid(row=0, column=1, sticky="w")
       
-      ttk.Label(customer_frame, text="Table #:").pack(side=tk.LEFT)
+      ttk.Label(customer_frame, text="Table #:").grid(row=1, column=0,
+                                                      sticky="e")
       self.table_entry = ttk.Entry(customer_frame, width=5)
-      self.table_entry.pack(side=tk.LEFT, padx=5)
+      self.table_entry.grid(row=1, column=1, sticky="w")
       
       self.order_tree = ttk.Treeview(summary_frame, columns=("Item", "Price"),
                                      show="headings")
@@ -156,27 +159,27 @@ class DineEasyApp:
       self.order_tree.heading("Price", text="Price")
       self.order_tree.column("Item", width=150)
       self.order_tree.column("Price", width=80)
-      self.order_tree.pack(fill=tk.BOTH, expand=False, pady=5)
+      self.order_tree.grid(row=1, column=0, sticky="nsew", pady=(10, 0))
 
       # This sets a frame for the order total and buttons
       button_frame = ttk.Frame(summary_frame)
-      button_frame.pack(fill=tk.X, pady=(10, 0))
+      button_frame.grid(row=2, column=0, pady=(10, 0), sticky="nsew")
       
       # This sets the order total label
       self.total_label = ttk.Label(button_frame, text="Total: $0.00",
                                     font=('Arial', 12, 'bold'))
-      self.total_label.pack(side=tk.LEFT)
+      self.total_label.grid(row=0, column=0)
 
       # This sets the remove item button and submit order button
-      ttk.Button(button_frame, text="Remove", command=self.remove_item).pack(side=tk.RIGHT, padx=5)
-      ttk.Button(button_frame, text="Submit", command=self.submit_order).pack(side=tk.RIGHT)
+      """ ttk.Button(button_frame, text="Remove", command=self.remove_item).pack(side=tk.RIGHT, padx=5)
+      ttk.Button(button_frame, text="Submit", command=self.submit_order).pack(side=tk.RIGHT) """
 
-      """ remove_button = ttk.Button(total_frame, text="Remove Item",
+      remove_button = ttk.Button(button_frame, text="Remove Item",
                                  command=self.remove_item)
-      remove_button.pack(side=tk.CENTER, padx=5, expand=True)
-      submit_button = ttk.Button(total_frame, text="Submit Order",
+      remove_button.grid(row=0, column=1, padx=5)
+      submit_button = ttk.Button(button_frame, text="Submit Order",
                                  command=self.submit_order)
-      submit_button.pack(side=tk.RIGHT, padx=5) """
+      submit_button.grid(row=0, column=2, padx=5)
 
       # MENU 
       # Menu frame
