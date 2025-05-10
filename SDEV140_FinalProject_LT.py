@@ -1,6 +1,6 @@
 # SDEV140_FinalProject_LT.py
 # Logan Till
-# 2025-05-02
+# 2025-05-10
 # DineEasy - Restaurant Ordering System
 # This program is for a restaurant ordering system
 # Coding assistance was used in this program
@@ -15,7 +15,6 @@ print("***************************************\n")
 import tkinter as tk
 from tkinter import ttk, messagebox
 from tkinter.font import Font
-import os
 
 # Constants
 TAX_RATE = 0.07
@@ -31,14 +30,12 @@ class DineEasyApp:
    def __init__(self, root):
       self.root = root
       self.root.title("DineEasy")
-      self.root.geometry("800x600")
+      self.root.geometry("900x500")
       self.root.resizable(False, False)
-      self.root.configure(bg="")
-      self.root.grid_rowconfigure(0, weight=1)
       self.root.grid_columnconfigure(0, weight=1)
       self.root.grid_columnconfigure(1, weight=3)
 
-      # This will create the menu items
+      # This will create the menu categories and items
       # CodeAssist-AI: IDE auto-completed this code 
       self.menu_items = {
          'Apps': [
@@ -118,86 +115,104 @@ class DineEasyApp:
       self.current_category = list(self.menu_items.keys())[0]
       self.setup_ui()
 
+   # This wil set up the user interface
    def setup_ui(self):
       # This will style the widgets
       style = ttk.Style()
-      style.theme_use("clam")
-      font_style = ('Arial', 12)
+      
 
       # This creates the main frame
-      self.main_frame = ttk.Frame(self.root, padding=20)
-      self.main_frame.pack(fill=tk.BOTH, expand=True)
+      self.main_frame = ttk.Frame(self.root)
+      self.main_frame.pack(fill=tk.BOTH, expand=False)
 
       # This will configure the grid weights
       self.main_frame.columnconfigure(0, weight=1)
       self.main_frame.columnconfigure(1, weight=2)
-      self.main_frame.rowconfigure(1, weight=1)
+      
 
 
       # ORDER SUMMARY - Left Side
       # Order summary frame
-      summary_frame = ttk.Frame(self.main_frame, padding=10)
+      summary_frame = ttk.Frame(self.main_frame, padding=10, relief="ridge")
       summary_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
-      customer_frame = ttk.Frame(summary_frame)
-      customer_frame.grid(row=0, column=0)
-      customer_frame.columnconfigure(0, weight=1)
-      customer_frame.columnconfigure(1, weight=2)
+      customer_frame = ttk.LabelFrame(summary_frame)
+      customer_frame.pack(fill=tk.X, pady=10)
 
-      ttk.Label(customer_frame, text="Name:").grid(row=0, column=0, sticky="e")
-      self.name_entry = ttk.Entry(customer_frame)
-      self.name_entry.grid(row=0, column=1, sticky="w")
-      
+
+      # Name label and entry box
+      ttk.Label(customer_frame, text="Name:").grid(row=0, column=0, sticky="e",
+                                                   padx=5, pady=5)
+      self.name_entry = ttk.Entry(customer_frame, width = 15)
+      self.name_entry.grid(row=0, column=1, sticky="w", padx=5, pady=5)
+
+      # Table label and entry box
       ttk.Label(customer_frame, text="Table #:").grid(row=1, column=0,
-                                                      sticky="e")
-      self.table_entry = ttk.Entry(customer_frame, width=5)
-      self.table_entry.grid(row=1, column=1, sticky="w")
+                                                      sticky="e", padx=5, pady=5)
+      self.table_entry = ttk.Entry(customer_frame, width=15)
+      self.table_entry.grid(row=1, column=1, sticky="w", padx=5, pady=5)
       
-      self.order_tree = ttk.Treeview(summary_frame, columns=("Item", "Price"),
+      # Current Order Frame
+      order_frame = ttk.LabelFrame(summary_frame, padding=10)
+      order_frame.pack(fill=tk.BOTH, expand=False)
+
+      #This order tree will track items that are added to the current order
+      self.order_tree = ttk.Treeview(order_frame, columns=("Item", "Price"),
                                      show="headings")
       self.order_tree.heading("Item", text="Item")
       self.order_tree.heading("Price", text="Price")
-      self.order_tree.column("Item", width=150)
+      self.order_tree.column("Item", width=120)
       self.order_tree.column("Price", width=80)
-      self.order_tree.grid(row=1, column=0, sticky="nsew", pady=(10, 0))
+      self.order_tree.pack(fill=tk.BOTH, expand=False)
 
       # This sets a frame for the order total and buttons
       button_frame = ttk.Frame(summary_frame)
-      button_frame.grid(row=2, column=0, pady=(10, 0), sticky="nsew")
+      button_frame.pack(fill=tk.X, pady=(10, 0), expand=False)
       
-      # This sets the order total label
-      self.total_label = ttk.Label(button_frame, text="Total: $0.00",
-                                    font=('Arial', 12, 'bold'))
-      self.total_label.grid(row=0, column=0)
-
-      # This sets the remove item button and submit order button
-      """ ttk.Button(button_frame, text="Remove", command=self.remove_item).pack(side=tk.RIGHT, padx=5)
-      ttk.Button(button_frame, text="Submit", command=self.submit_order).pack(side=tk.RIGHT) """
-
+      # This sets up the remove button
       remove_button = ttk.Button(button_frame, text="Remove Item",
                                  command=self.remove_item)
-      remove_button.grid(row=0, column=1, padx=5)
-      submit_button = ttk.Button(button_frame, text="Submit Order",
+      remove_button.pack(side=tk.LEFT, expand=False, padx=5)
+
+      # This sets up the clear button
+      clear_button = ttk.Button(button_frame, text="Clear", command=self.clear_order)
+      clear_button.pack(side=tk.LEFT, expand=False, padx=5)
+
+      # Order total and submit
+      total_frame = ttk.Frame(summary_frame)
+      total_frame.pack(fill=tk.X, pady=(10, 0), expand=False)
+
+      # This sets the order total label
+      self.total_label = ttk.Label(total_frame, text="Total: $0.00",
+                                    font=('Arial', 12, 'bold'))
+      self.total_label.pack(side=tk.LEFT, expand=False, padx=5)
+
+      # This sets up the submit button
+      submit_button = ttk.Button(total_frame, text="Submit Order",
                                  command=self.submit_order)
-      submit_button.grid(row=0, column=2, padx=5)
+      submit_button.pack(side=tk.LEFT, expand=False, padx=5)
 
       # MENU 
       # Menu frame
-      menu_frame = ttk.Frame(self.main_frame, padding=10)
+      menu_frame = ttk.Frame(self.main_frame, padding=10, relief="ridge")
       menu_frame.grid(row=0, column=1, padx = 10, pady=10, sticky="nsew")
 
-      categories_frame = ttk.Frame(menu_frame,)
-      categories_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+      # This set the frame for the categories
+      categories_frame = ttk.Frame(menu_frame)
+      categories_frame.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
       
+      # This will list all the categories in the menu
       for category in self.menu_items.keys():
          btn = ttk.Button(categories_frame, text=category, 
-                        command=lambda c=category: self.show_menu_items(c))
-         btn.pack(side=tk.LEFT, expand=True, padx=2)
+                        command=lambda c=category: self.show_menu_items(c),width=3)
+         btn.config(width=5)
+         btn.pack(side=tk.LEFT, expand=True, fill=tk.BOTH, padx=2, pady=2)
 
       self.items_frame = ttk.Frame(menu_frame)
       self.items_frame.grid(row=1, column=0, sticky="nsew")
       self.show_menu_items(list(self.menu_items.keys())[0])
 
+   #CodeAssist-AI: used multiple AI sources over several revisions
    def show_menu_items(self, category):
       # Clear the current menu items
       for widget in self.items_frame.winfo_children():
@@ -208,7 +223,7 @@ class DineEasyApp:
       items = self.menu_items[category]
       
       for i, item in enumerate(items):
-         item_frame = ttk.Frame(self.items_frame, padding=5, relief="solid", borderwidth=1)
+         item_frame = ttk.Frame(self.items_frame, padding=5, relief="ridge", borderwidth=1)
          item_frame.grid(row=row, column=col, padx=5, pady=5, sticky="nsew")
          
          # Make entire frame clickable
@@ -236,17 +251,13 @@ class DineEasyApp:
          for i in range(row + 1):
             self.items_frame.rowconfigure(i, weight=1)
 
+   # This function will add an item to the order and call the update total
    def add_item(self, item):
-      # Check if item already exists
-      for child in self.order_tree.get_children():
-         if self.order_tree.item(child)['values'][0] == item['name']:
-               messagebox.showwarning("Warning", f"{item['name']} is already in your order")
-               return
-      
       # Add to order
       self.order_tree.insert("", tk.END, values=(item['name'], f"${item['price']:.2f}"))
       self.update_total()
 
+   # Sets up the remove item function and call update total
    def remove_item(self):
       selected_item = self.order_tree.selection()
 
@@ -255,6 +266,13 @@ class DineEasyApp:
 
       self.update_total()
 
+   # Clear button function
+   def clear_order(self):
+        if messagebox.askyesno("Clear Order", "Are you sure you want to clear your entire order?"):
+            self.order_tree.delete(*self.order_tree.get_children())
+            self.update_total()
+
+   # This will update the total as items are added and removed
    def update_total(self):
       global order_total
       order_total = 0.0
@@ -267,20 +285,9 @@ class DineEasyApp:
       # Update the total amount label
       self.total_label.config(text=f"Total: ${order_total:.2f}")
 
+   # This will submit the order and bring up a confirmation box
    def submit_order(self):
-      name = self.name_entry.get()
-      table = self.table_entry.get()
-
-      order_summary = []
-      for child in self.order_tree.get_children():
-         item = self.order_tree.item(child)['values']
-         order_summary.append(f"{item[0]} - {item[1]}")
-      
-      # Show confirmation
-      message = f"Customer: {name}\nTable: {table}\n\nOrder:\n" + "\n".join(order_summary)
-      message += f"\n\nTotal: ${order_total:.2f}"
-      
-      if messagebox.askyesno("Confirm Order", message + "\n\nSubmit this order?"):
+      if messagebox.askyesno("Confirm Order", "Submit this order?"):
          messagebox.showinfo("Success", "Order submitted successfully!")
          # Clear the order
          for item in self.order_tree.get_children():
