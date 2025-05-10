@@ -1,4 +1,4 @@
-# m06_assn1_LT.py
+# m07_assn1_LT.py
 # Logan Till
 # 2025-04-19
 # Fahrenheit/Celsius Converter
